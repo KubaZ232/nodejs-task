@@ -10,6 +10,8 @@ export declare class ImagesService {
         title?: string;
         limit: number;
         offset: number;
+        sort?: string;
+        fields?: string;
     }): Promise<{
         total: number;
         limit: number;

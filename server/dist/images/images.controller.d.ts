@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import { CreateImageDto } from './dto/create-image.dto';
 import { QueryImagesDto } from './dto/query-images.dto';
 import { ImagesService } from './images.service';
@@ -11,7 +12,12 @@ export declare class ImagesController {
         width: number;
         height: number;
     }>;
-    list(q: QueryImagesDto): Promise<{
+    list(q: QueryImagesDto, req: Request): Promise<{
+        links: {
+            self: string;
+            next: string | null;
+            prev: string | null;
+        };
         total: number;
         limit: number;
         offset: number;

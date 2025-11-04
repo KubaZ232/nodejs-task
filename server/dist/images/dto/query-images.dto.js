@@ -15,6 +15,8 @@ const class_validator_1 = require("class-validator");
 const pagination_dto_1 = require("../../common/dto/pagination.dto");
 class QueryImagesDto extends pagination_dto_1.PaginationDto {
     title;
+    sort;
+    fields;
 }
 exports.QueryImagesDto = QueryImagesDto;
 __decorate([
@@ -23,4 +25,17 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], QueryImagesDto.prototype, "title", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'createdAt:desc', description: 'field:asc|desc' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Matches)(/^[a-zA-Z_]+:(asc|desc)$/i, { message: 'sort must be "field:asc|desc"' }),
+    __metadata("design:type", String)
+], QueryImagesDto.prototype, "sort", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'id,title,url', description: 'comma-separated list of fields to return' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], QueryImagesDto.prototype, "fields", void 0);
 //# sourceMappingURL=query-images.dto.js.map

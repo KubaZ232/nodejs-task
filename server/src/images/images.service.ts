@@ -8,6 +8,9 @@ import { CreateImageDto } from './dto/create-image.dto';
 import { StorageDriver } from './storage/storage.interface';
 import { LocalStorage } from './storage/local.storage';
 
+const ALLOWED_FIELDS = new Set<keyof Image>(['id','title','url','width','height','createdAt']);
+const DEFAULT_FIELDS: (keyof Image)[] = ['id','title','url','width','height','createdAt'];
+
 @Injectable()
 export class ImagesService {
   private store: StorageDriver;
@@ -38,17 +41,32 @@ export class ImagesService {
     return await this.repo.save(entity);
   }
 
-  async list(q: { title?: string; limit: number; offset: number }) {
+  async list(q: { title?: string; limit: number; offset: number; sort?: string; fields?: string }) {
     const where = q.title ? { title: ILike(`%${q.title}%`) } : {};
+
+    let order: Record<string, 'ASC' | 'DESC'> = { createdAt: 'DESC' };
+    if (q.sort) {
+      const [rawField, dir = 'desc'] = q.sort.split(':');
+      const field = rawField as keyof Image;
+      if (ALLOWED_FIELDS.has(field)) {
+        order = { [field]: dir.toLowerCase() === 'asc' ? 'ASC' : 'DESC' };
+      }
+    }
+
+    const requested = (q.fields ? q.fields.split(',') : DEFAULT_FIELDS) as string[];
+    const select = requested.filter((f): f is keyof Image => ALLOWED_FIELDS.has(f as keyof Image));
+  
     const [items, total] = await this.repo.findAndCount({
       where,
-      order: { createdAt: 'DESC' },
+      order,
       take: q.limit,
       skip: q.offset,
-      select: ['id','title','url','width','height','createdAt'],
+      select: (select.length ? select : DEFAULT_FIELDS) as any,
     });
+  
     return { total, limit: q.limit, offset: q.offset, items };
   }
+
 
   async getById(id: string) {
     const img = await this.repo.findOne({ where: { id } });

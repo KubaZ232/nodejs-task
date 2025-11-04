@@ -33,17 +33,46 @@ let ImagesController = class ImagesController {
     }
     async create(dto, file) {
         const img = await this.service.create(dto, file);
-        return { id: img.id, url: img.url, title: img.title, width: img.width, height: img.height };
+        return {
+            id: img.id,
+            url: img.url,
+            title: img.title,
+            width: img.width,
+            height: img.height,
+        };
     }
-    async list(q) {
+    async list(q, req) {
         const limit = q.limit ?? 20;
         const offset = q.offset ?? 0;
-        const title = q.title;
-        return this.service.list({ title, limit, offset });
+        const data = await this.service.list({
+            title: q.title,
+            limit,
+            offset,
+            sort: q.sort,
+            fields: q.fields,
+        });
+        const base = `${req.protocol}://${req.get('host')}${req.path}`;
+        const mk = (o) => {
+            const params = new URLSearchParams({
+                ...req.query,
+                limit: String(limit),
+                offset: String(o),
+            });
+            return `${base}?${params.toString()}`;
+        };
+        const next = offset + limit < data.total ? mk(offset + limit) : null;
+        const prev = offset - limit >= 0 ? mk(offset - limit) : null;
+        return { ...data, links: { self: mk(offset), next, prev } };
     }
     async get(id) {
         const img = await this.service.getById(id);
-        return { id: img.id, url: img.url, title: img.title, width: img.width, height: img.height };
+        return {
+            id: img.id,
+            url: img.url,
+            title: img.title,
+            width: img.width,
+            height: img.height,
+        };
     }
 };
 exports.ImagesController = ImagesController;
@@ -66,9 +95,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
         fileIsRequired: true,
-        validators: [
-            new common_1.MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
-        ],
+        validators: [new common_1.MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 })],
     }))),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_image_dto_1.CreateImageDto, Object]),
@@ -79,9 +106,12 @@ __decorate([
     (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number, example: 10, minimum: 0 }),
     (0, swagger_1.ApiQuery)({ name: 'offset', required: false, type: Number, example: 0, minimum: 0 }),
     (0, swagger_1.ApiQuery)({ name: 'title', required: false, type: String, description: 'contains text' }),
+    (0, swagger_1.ApiQuery)({ name: 'sort', required: false, type: String, example: 'createdAt:desc' }),
+    (0, swagger_1.ApiQuery)({ name: 'fields', required: false, type: String, example: 'id,title,url' }),
     __param(0, (0, common_1.Query)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [query_images_dto_1.QueryImagesDto]),
+    __metadata("design:paramtypes", [query_images_dto_1.QueryImagesDto, Object]),
     __metadata("design:returntype", Promise)
 ], ImagesController.prototype, "list", null);
 __decorate([

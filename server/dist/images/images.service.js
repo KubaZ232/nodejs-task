@@ -23,6 +23,8 @@ const crypto_1 = require("crypto");
 const sharp_1 = __importDefault(require("sharp"));
 const image_entity_1 = require("./image.entity");
 const local_storage_1 = require("./storage/local.storage");
+const ALLOWED_FIELDS = new Set(['id', 'title', 'url', 'width', 'height', 'createdAt']);
+const DEFAULT_FIELDS = ['id', 'title', 'url', 'width', 'height', 'createdAt'];
 let ImagesService = class ImagesService {
     repo;
     store;
@@ -50,12 +52,22 @@ let ImagesService = class ImagesService {
     }
     async list(q) {
         const where = q.title ? { title: (0, typeorm_2.ILike)(`%${q.title}%`) } : {};
+        let order = { createdAt: 'DESC' };
+        if (q.sort) {
+            const [rawField, dir = 'desc'] = q.sort.split(':');
+            const field = rawField;
+            if (ALLOWED_FIELDS.has(field)) {
+                order = { [field]: dir.toLowerCase() === 'asc' ? 'ASC' : 'DESC' };
+            }
+        }
+        const requested = (q.fields ? q.fields.split(',') : DEFAULT_FIELDS);
+        const select = requested.filter((f) => ALLOWED_FIELDS.has(f));
         const [items, total] = await this.repo.findAndCount({
             where,
-            order: { createdAt: 'DESC' },
+            order,
             take: q.limit,
             skip: q.offset,
-            select: ['id', 'title', 'url', 'width', 'height', 'createdAt'],
+            select: (select.length ? select : DEFAULT_FIELDS),
         });
         return { total, limit: q.limit, offset: q.offset, items };
     }
