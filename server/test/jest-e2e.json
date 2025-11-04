@@ -1,0 +1,7 @@
+{
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "moduleFileExtensions": ["ts", "js", "json"],
+  "testMatch": ["**/*.e2e-spec.ts"],
+  "transform": { "^.+\\.(t|j)s$": "ts-jest" }
+}

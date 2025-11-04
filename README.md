@@ -1,3 +1,20 @@
+# Images API (NestJS + Postgres + Sharp)
+
+A small, production-style REST API for uploading, resizing, and serving images.
+
+## Quick start
+
+### 0) Requirements
+- Node.js LTS
+- Docker Desktop (with docker-compose)
+- Windows/Linux/macOS
+
+### 1) Start Postgres
+```bash
+docker compose up -d
+# DB runs on localhost:5432 user=app pass=app db=images
+
+
 # NodeJS Recruitment Task
 
 This task will require from you to create a simple REST API for uploading and serving images.
