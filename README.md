@@ -2,7 +2,7 @@
 
 A small, production-style REST API for uploading, resizing, and serving images.
 
-## Quick start - Getting startedc
+## Quick start - Getting started
 
 ### 1) Install dependencies (inside `server/`)
 cd server
