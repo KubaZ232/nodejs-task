@@ -2,17 +2,31 @@
 
 A small, production-style REST API for uploading, resizing, and serving images.
 
-## Quick start
+## Quick start - Getting startedc
 
+### 1) Install dependencies (inside `server/`)
+cd server
+npm install
+
+### 2 Start Postgres (from repo root, where docker-compose.yml lives)
+cd..
+docker compose up -d
+
+### Run the dev server (in a new terminal, inside server/)
+cd server
+npm run start:dev
+
+### 4 If you want to run tests open new terminal ( while dev server is running )
+## remember to be in server folder
+cd server
+npm run test:e2e -- --runInBand
+
+```bash
+npm install
 ### 0) Requirements
 - Node.js LTS
 - Docker Desktop (with docker-compose)
 - Windows/Linux/macOS
-
-### 1) Start Postgres
-```bash
-docker compose up -d
-# DB runs on localhost:5432 user=app pass=app db=images
 
 
 # NodeJS Recruitment Task
