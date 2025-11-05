@@ -4,6 +4,9 @@ A small, production-style REST API for uploading, resizing, and serving images.
 
 ## Quick start - Getting started
 
+### 0. Start Docker Desktop
+Just open Docker Desktop
+
 ### 1. Install dependencies (inside `server/`)
 ```bash
 cd server
