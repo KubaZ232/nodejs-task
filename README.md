@@ -4,22 +4,30 @@ A small, production-style REST API for uploading, resizing, and serving images.
 
 ## Quick start - Getting started
 
-### 1) Install dependencies (inside `server/`)
+### 1. Install dependencies (inside `server/`)
+```bash
 cd server
 npm install
+```
 
-### 2 Start Postgres (from repo root, where docker-compose.yml lives)
+### 2. Start Postgres (from repo root, where docker-compose.yml lives)
+```bash
 cd..
 docker compose up -d
+```
 
 ### Run the dev server (in a new terminal, inside server/)
+```bash
 cd server
 npm run start:dev
+```
 
-### 4 If you want to run tests open new terminal ( while dev server is running )
+### 3. If you want to run tests open new terminal ( while dev server is running )
 ## remember to be in server folder
+```bash
 cd server
 npm run test:e2e -- --runInBand
+```
 
 ```bash
 npm install
