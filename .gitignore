@@ -1,1 +1,6 @@
-printf "node_modules\ndist\ncoverage\n.env\nuploads\n" > .gitignore
+# server/.gitignore
+node_modules
+dist
+coverage
+.env
+
